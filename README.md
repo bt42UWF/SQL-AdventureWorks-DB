@@ -1,6 +1,8 @@
 # SQL-AdventureWorks-DB
 ### This SQL script operates on the AdventureWorks database and performs several queries related to sales data for the year 2020
 
+*This code is practice from a class assignment.*
+
 Here's a breakdown of what each part does:
 
 1. Total Revenue in 2020:

@@ -1,0 +1,39 @@
+-- Use the AdventureWorks database
+USE AdventureWorks;
+
+-- Calculate the total revenue generated in the year 2020
+SELECT SUM(SOH.TotalDue) AS TotalRevenue
+FROM Sales.SalesOrderHeader SOH
+WHERE YEAR(SOH.OrderDate) = 2020; 
+
+-- Retrieve the top 5 best-selling products in the year 2020
+SELECT TOP 5
+       P.Name AS ProductName,
+       SUM(SOD.OrderQty) AS TotalQuantitySold
+FROM Production.Product P
+INNER JOIN Sales.SalesOrderDetail SOD ON P.ProductID = SOD.ProductID
+INNER JOIN Sales.SalesOrderHeader SOH ON SOD.SalesOrderID = SOH.SalesOrderID
+WHERE YEAR(SOH.OrderDate) = 2020 
+GROUP BY P.Name
+ORDER BY TotalQuantitySold DESC;
+
+-- Calculate the monthly revenue for each month in the year 2020
+SELECT MONTH(SOH.OrderDate) AS Month,
+       DATENAME(MONTH, SOH.OrderDate) AS MonthName,
+       SUM(SOH.TotalDue) AS MonthlyRevenue
+FROM Sales.SalesOrderHeader SOH
+WHERE YEAR(SOH.OrderDate) = 2020
+GROUP BY MONTH(SOH.OrderDate), DATENAME(MONTH, SOH.OrderDate)
+ORDER BY MONTH(SOH.OrderDate);
+
+-- Retrieve the top 5 customers based on their total purchase amount in the year 2020
+SELECT TOP 5
+       C.CustomerID,
+       CONCAT(P.FirstName, ' ', P.LastName) AS CustomerName,
+       SUM(SOH.TotalDue) AS TotalPurchaseAmount
+FROM Sales.Customer C
+INNER JOIN Person.Person P ON C.PersonID = P.BusinessEntityID
+INNER JOIN Sales.SalesOrderHeader SOH ON C.CustomerID = SOH.CustomerID
+WHERE YEAR(SOH.OrderDate) = 2020
+GROUP BY C.CustomerID, CONCAT(P.FirstName, ' ', P.LastName)
+ORDER BY TotalPurchaseAmount DESC;
